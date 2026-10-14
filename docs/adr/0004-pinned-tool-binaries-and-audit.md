@@ -39,3 +39,7 @@ On 2026-10-08 `govulncheck -mode=binary` (v1.8.0, Go 1.26.8) reported:
   the Makefile once a Regal release no longer carries known vulnerabilities.
 - Dependabot cannot bump versions pinned in a shell script; it covers the GitHub Actions and the
   AWS provider in the lock files, and the tool versions are reviewed by hand.
+
+## Update (2026-10-15)
+
+The Go security release of 2026-10-08 left conftest, Terraform and the AWS provider without a fixed release. Accepting those IDs globally would also have hidden the same IDs in OPA, which does have a fixed release (1.21.2). `scripts/audit-accepted.txt` therefore names the binaries each ID is accepted for (a name with `.exe` means the Windows build only), and `scripts/audit.sh` flags an accepted pair that is no longer reported for a binary it scanned.
