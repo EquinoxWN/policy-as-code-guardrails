@@ -26,7 +26,7 @@ flowchart LR
   PR["pull request<br/>Terraform change"] --> P["terraform plan -out<br/>scripts/tf.sh: no credentials,<br/>network blocked after init"]
   P --> J["terraform show -json<br/>plan JSON"]
   J --> C["conftest test --all-namespaces"]
-  subgraph R["policy/ (Rego, OPA 1.21.1)"]
+  subgraph R["policy/ (Rego, OPA 1.21.2)"]
     L["lib/tfplan<br/>planned resources, module references"]
     R1["PAC001 public access block"]
     R2["PAC002 public ACL / policy"]
@@ -92,7 +92,7 @@ Languages: **Rego** and **HCL** (examples), with POSIX shell scripts. The rules 
 **Prerequisites:** `make`, a POSIX shell, `curl`, `unzip` and `tar` (Linux, or Git Bash on Windows; amd64). Go 1.26 only for `make audit`. No cloud account: `make setup` downloads OPA, conftest and Terraform into `.tmp/bin` and checks each against the SHA-256 pinned in `scripts/tools.sh` and the checksum file published with the release.
 
 ```bash
-make setup    # pinned OPA 1.21.1, conftest 0.71.1, Terraform 1.16.5 into .tmp/bin, checksum-verified
+make setup    # pinned OPA 1.21.2, conftest 0.71.1, Terraform 1.16.5 into .tmp/bin, checksum-verified
 make lint     # opa fmt --fail, opa check --strict, terraform fmt -check
 make test     # opa test: 56 unit tests
 make mutate   # 12 deliberate bugs in copies of the policies; the tests must catch each one

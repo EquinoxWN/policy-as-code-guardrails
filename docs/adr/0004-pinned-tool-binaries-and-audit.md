@@ -12,7 +12,7 @@ On 2026-10-08 `govulncheck -mode=binary` (v1.8.0, Go 1.26.8) reported:
 
 | Binary | Findings in code the binary contains |
 |---|---|
-| OPA 1.21.1 | none |
+| OPA 1.21.2 | none |
 | conftest 0.71.1 | GO-2026-5932 (`golang.org/x/crypto/openpgp` unmaintained, no fixed version) |
 | Terraform 1.16.5 | GO-2026-5932 |
 | hashicorp/aws 6.67.0 | GO-2026-5932 |

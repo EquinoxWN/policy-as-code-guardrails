@@ -22,7 +22,7 @@ HCP Terraform or Terraform Enterprise.
 - Evaluate the JSON of a real plan (`terraform show -json`), not the HCL: variables, module
   defaults, `default_tags`, `count` and `for_each` are already resolved there.
 - Run the rules with conftest in CI (`--all-namespaces`) and test them with `opa test`, which
-  share the same OPA engine version (1.21.1).
+  share the same OPA engine version (1.21.2).
 - Share plan handling in one library, `policy/lib/tfplan`, so every rule skips deletions and data
   sources the same way and resolves module references the same way.
 

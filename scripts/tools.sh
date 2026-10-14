@@ -3,7 +3,7 @@
 # match the SHA-256 pinned below and the checksum file the project publishes for that release.
 set -eu
 
-OPA_VERSION=1.21.1
+OPA_VERSION=1.21.2
 CONFTEST_VERSION=0.71.1
 TERRAFORM_VERSION=1.16.5
 
@@ -19,14 +19,14 @@ esac
 
 if [ "$platform" = windows ]; then
   OPA_ASSET=opa_windows_amd64.exe
-  OPA_SHA256=25406f7c6e147d687fd7fd546f835bafa160a6242c605ee94a23ba6cd7bccdcd
+  OPA_SHA256=0089fa7ad8cdea7ff9e56ff86fa9202462afb63ef74506e2b547a24b4a987ccb
   CONFTEST_ASSET=conftest_${CONFTEST_VERSION}_Windows_x86_64.zip
   CONFTEST_SHA256=34d623334b5e7ed4465bf62a4cb3b092684859cd3d224bbd390925a0852b922a
   TERRAFORM_ASSET=terraform_${TERRAFORM_VERSION}_windows_amd64.zip
   TERRAFORM_SHA256=01700102b7291f95c0ab61394b55bfd5f57a12ac65632c2c1958691c8cf438ef
 else
   OPA_ASSET=opa_linux_amd64_static
-  OPA_SHA256=668506eb17a2eaa1fce6cc0d1f42ef85125d4ac5bda5fc74d1152d0c77145031
+  OPA_SHA256=830ab11f61ffec760b5e19db0d7ad02bf037e13f5ef4d665faeaf17632177527
   CONFTEST_ASSET=conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz
   CONFTEST_SHA256=c3f6b2a753bd56e377a1e51a95ae3e057f926f2e9139f7d5b5dfbbaf810f7985
   TERRAFORM_ASSET=terraform_${TERRAFORM_VERSION}_linux_amd64.zip

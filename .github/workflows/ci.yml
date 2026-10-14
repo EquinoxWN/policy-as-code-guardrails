@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      # Pinned OPA 1.21.1, conftest 0.71.1 and Terraform 1.16.5, each checked against the pinned
+      # Pinned OPA 1.21.2, conftest 0.71.1 and Terraform 1.16.5, each checked against the pinned
       # SHA-256 and the release's published checksums; then Rego and Terraform formatting checks.
       - run: make setup lint
       - name: Unit tests (opa test)
@@ -36,7 +36,7 @@ jobs:
         run: make e2e
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
-          go-version: "1.26"
+          go-version: "1.26.9"
           cache: false
       - name: Known-vulnerability audit of the tool and provider binaries (govulncheck)
         run: make audit
