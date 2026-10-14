@@ -1,0 +1,11 @@
+PAC001 aws_s3_bucket.public_site: aws_s3_bucket_public_access_block.public_site leaves block_public_acls, block_public_policy off
+PAC001 aws_s3_bucket.uploads: no aws_s3_bucket_public_access_block covers this bucket
+PAC002 aws_s3_bucket_acl.public_site: canned ACL public-read opens the bucket beyond the account
+PAC002 aws_s3_bucket_policy.public_site: statement PublicRead allows s3:GetObject to any principal without a narrowing condition
+PAC003 aws_security_group.bastion: ingress from 0.0.0.0/0 to 22 (SSH)
+PAC003 aws_security_group_rule.rdp: ingress from ::/0 to 3389 (RDP)
+PAC003 aws_vpc_security_group_ingress_rule.everything: ingress from 0.0.0.0/0 to all ports
+PAC004 aws_db_instance.reporting: publicly_accessible is true, so the instance gets a public address
+PAC005 aws_db_instance.reporting: storage_encrypted is not set to true
+PAC005 aws_ebs_volume.scratch: encrypted is not set to true
+PAC006 aws_ebs_volume.scratch: missing required tags cost_center, environment

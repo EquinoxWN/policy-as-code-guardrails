@@ -1,0 +1,4 @@
+# Policies, fixtures and expected messages are compared byte for byte: keep LF everywhere.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
