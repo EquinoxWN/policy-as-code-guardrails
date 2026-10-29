@@ -1,11 +1,11 @@
 #!/bin/sh
 # Known-vulnerability audit of every third-party binary this repository runs: OPA, conftest,
-# Terraform and the AWS provider, scanned by govulncheck in binary mode with Go 1.26.9. A finding
+# Terraform and the AWS provider, scanned by govulncheck in binary mode with Go 1.26.10. A finding
 # in code the binary contains fails the audit unless scripts/audit-accepted.txt accepts that ID for
 # that binary, with a reason; an accepted pair that is no longer reported is flagged so the list
 # stays current.
 set -eu
-export GOTOOLCHAIN=go1.26.9
+export GOTOOLCHAIN=go1.26.10
 
 ext=
 case "$(uname -s)" in MINGW* | MSYS* | CYGWIN*) ext=.exe ;; esac

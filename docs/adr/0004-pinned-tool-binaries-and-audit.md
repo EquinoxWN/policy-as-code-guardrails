@@ -43,3 +43,7 @@ On 2026-10-08 `govulncheck -mode=binary` (v1.8.0, Go 1.26.8) reported:
 ## Update (2026-10-15)
 
 The Go security release of 2026-10-08 left conftest, Terraform and the AWS provider without a fixed release. Accepting those IDs globally would also have hidden the same IDs in OPA, which does have a fixed release (1.21.2). `scripts/audit-accepted.txt` therefore names the binaries each ID is accepted for (a name with `.exe` means the Windows build only), and `scripts/audit.sh` flags an accepted pair that is no longer reported for a binary it scanned.
+
+## Update (2026-10-30)
+
+Terraform 1.17.1 (built with Go 1.26.10) and hashicorp/aws 6.71.0 (Go 1.27.3) no longer contain the IDs of the 2026-10-08 Go security release, so their entries were removed and both are accepted for GO-2026-5932 only. OPA 1.22.0 (Go 1.27.3) is clean. conftest 0.71.1 is still the latest release and is built with Go 1.27.1; besides the earlier IDs it now reports GO-2026-6809 (crypto/x509, fixed in Go 1.26.10 / 1.27.3) and GO-2026-6860 and GO-2026-6866 (`golang.org/x/net/html`, fixed in x/net 0.62.0). They are accepted for conftest only, because here it reads local Rego and plan JSON, verifies no TLS certificate and parses no HTML; any finding in the other three binaries still fails the build.
