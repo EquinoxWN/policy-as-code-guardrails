@@ -128,7 +128,7 @@ Quality check against the 10 engineering rules, with the mutation table: [docs/q
 | Does the gate catch a broken rule? | With PAC003 changed to ignore `::/0`, `make e2e` failed and showed the missing RDP line |
 | Cloud access | 0 AWS API calls (placeholder keys, network blocked after `init`); nothing applied |
 | Lint | `opa fmt --fail`, `opa check --strict`, `terraform fmt -check`: clean. Regal 0.43.0 run once: 37 findings, all fixed |
-| Supply chain | 3 of 3 tool downloads match the pinned and published SHA-256; govulncheck (Go 1.26.10): opa clean; Terraform and the AWS provider only GO-2026-5932 (no fix released); conftest 0.71.1, the latest release, 16 IDs (17 in the Windows build) from its Go 1.27.1 build and older `golang.org/x/net`; all accepted per binary with a reason in [`scripts/audit-accepted.txt`](scripts/audit-accepted.txt) |
+| Supply chain | 3 of 3 tool downloads match the pinned and published SHA-256; govulncheck (Go 1.26.10): GO-2026-5932 in Terraform and the AWS provider and, since 2026-11-05, GO-2026-6865 (`klauspost/compress`) in opa, conftest and Terraform, no fixed release of either; conftest 0.71.1, the latest release, 16 IDs (17 in the Windows build) from its Go 1.27.1 build and older `golang.org/x/net`; all accepted per binary with a reason in [`scripts/audit-accepted.txt`](scripts/audit-accepted.txt) |
 
 ## Roadmap
 
