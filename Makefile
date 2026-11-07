@@ -20,7 +20,7 @@ lint:
 test:
 	$(OPA) test policy -v
 
-# Twelve deliberate bugs in copies of the policies; the unit tests must catch every one.
+# Nineteen deliberate bugs in copies of the policies; the unit tests must catch every one.
 mutate:
 	sh scripts/mutate.sh
 

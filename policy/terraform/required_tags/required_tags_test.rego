@@ -48,3 +48,10 @@ test_untagged_resource_fails_with_every_tag if {
 	expected := "PAC006 aws_vpc.main: missing required tags cost_center, environment, owner"
 	rule.deny == {expected} with input as fixtures.plan([vpc])
 }
+
+test_resource_with_unknown_tags_all_is_still_checked if {
+	tags := object.remove(complete, ["cost_center"])
+	volume := fixtures.with_unknown(fixtures.resource("aws_ebs_volume", "data", {"tags": tags}), {"tags_all": true})
+	expected := "PAC006 aws_ebs_volume.data: missing required tags cost_center"
+	rule.deny == {expected} with input as fixtures.plan([volume])
+}

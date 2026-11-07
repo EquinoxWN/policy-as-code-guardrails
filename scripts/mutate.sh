@@ -67,6 +67,14 @@ mutate terraform/encryption_at_rest/encryption_at_rest.rego 'tfplan.after(rc, at
 mutate terraform/required_tags/required_tags.rego 'trim_space(value) != ""' 'value != ""' \
   'a blank tag value counts as set'
 
+mutate terraform/sg_open_ingress/sg_open_ingress.rego 'rule.from <= port' 'rule.from < port'   'the first port of a range is not checked'
+mutate terraform/sg_open_ingress/sg_open_ingress.rego '"tcp", "udp", "6", "17"}' '"tcp", "udp"}'   'numeric protocol 6 (TCP) is not checked'
+mutate terraform/required_tags/required_tags.rego 'rc.change.after_unknown[attribute][key] == true'   'rc.change.after_unknown[attribute] == true' 'a tag known only after apply counts as missing'
+mutate terraform/required_tags/required_tags.rego 'object.get(rc.change, "after_unknown", {})' '{}'   'a resource whose tags_all is unknown at plan time is not checked'
+mutate terraform/encryption_at_rest/encryption_at_rest.rego '	"aws_rds_cluster": "storage_encrypted",' ''   'Aurora clusters are not checked for encryption'
+mutate lib/tfplan/tfplan.rego 'rc.mode == "managed"' 'true'   'data sources are checked as if they were resources'
+mutate terraform/db_public_access/db_public_access.rego 'tfplan.after(db, "publicly_accessible", false) == true'   'tfplan.after(db, "publicly_accessible", true) == true' 'publicly_accessible unknown at plan time counts as public'
+
 rm -rf "$work"
 echo "$killed of $total mutants killed"
 if [ "$killed" -ne "$total" ]; then

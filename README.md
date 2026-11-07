@@ -9,7 +9,7 @@ Part of my **DevOps and Cloud** list · Rego · Terraform
 
 ## Proof it works
 
-56 unit tests pass, and a mutation check shows they catch all 12 deliberate bugs planted in copies of the rules:
+57 unit tests pass, and a mutation check shows they catch all 19 deliberate bugs planted in copies of the rules (the image below is from the M1 run with 56 tests and 12 mutants):
 
 ![opa test and the mutation check](docs/proof/tests.jpg)
 
@@ -38,7 +38,7 @@ flowchart LR
   R --> C
   C -->|"no violations: exit 0"| M["merge allowed"]
   C -->|"violations: exit 1"| B["PR check fails<br/>PAC00x address: reason"]
-  T["opa test (56) + mutation check (12)"] -.-> R
+  T["opa test (57) + mutation check (19)"] -.-> R
 ```
 
 **Full roadmap (M1 to M3):**
@@ -82,7 +82,7 @@ Each message starts with the rule ID and the resource address, for example `PAC0
 |---|---|---|
 | Rules | OPA Rego (v1 syntax), six rules on Terraform plan JSON, a shared `lib/tfplan` library | Gatekeeper constraint templates for Kubernetes (M2) |
 | Enforcement | conftest 0.71.1 in GitHub Actions on real plans from Terraform 1.17.1 and hashicorp/aws 6.71.0 | Audit mode and time-limited waivers (M3) |
-| Testing | `opa test` (56 tests, passing and failing fixtures), a 12-mutant mutation check, an end-to-end check with an exact expected-violations list | Coverage report (M2) |
+| Testing | `opa test` (57 tests, passing and failing fixtures), a 19-mutant mutation check, an end-to-end check with an exact expected-violations list | Coverage report (M2) |
 | Supply chain | Tools pinned by version and SHA-256, govulncheck binary audit with an explicit accepted list, actions pinned by SHA | - |
 
 Languages: **Rego** and **HCL** (examples), with POSIX shell scripts. The rules are in [`policy/terraform/`](policy/terraform) with their tests beside them, the shared plan helpers in [`policy/lib/tfplan`](policy/lib/tfplan), test builders in [`policy/lib/fixtures`](policy/lib/fixtures), the example stacks in [`examples/`](examples), and the scripts in [`scripts/`](scripts).
@@ -94,8 +94,8 @@ Languages: **Rego** and **HCL** (examples), with POSIX shell scripts. The rules 
 ```bash
 make setup    # pinned OPA 1.22.0, conftest 0.71.1, Terraform 1.17.1 into .tmp/bin, checksum-verified
 make lint     # opa fmt --fail, opa check --strict, terraform fmt -check
-make test     # opa test: 56 unit tests
-make mutate   # 12 deliberate bugs in copies of the policies; the tests must catch each one
+make test     # opa test: 57 unit tests
+make mutate   # 19 deliberate bugs in copies of the policies; the tests must catch each one
 make e2e      # plan both examples offline, terraform show -json, conftest; exact expected violations
 make audit    # govulncheck on opa, conftest, terraform and the AWS provider (after make e2e)
 make check PLAN=path/to/plan.json   # evaluate your own plan
@@ -106,6 +106,7 @@ make check PLAN=path/to/plan.json   # evaluate your own plan
 ## Tests and results
 
 Full commands, every test name, the mutants and the DMAIC analysis: [docs/results/m1.md](docs/results/m1.md). Measured on Windows 11 (i7-13700H); the full check ran twice with the same results.
+Quality check against the 10 engineering rules, with the mutation table: [docs/quality/2026-11-01.md](docs/quality/2026-11-01.md).
 
 | Test file | Tests | What it proves |
 |---|---|---|
@@ -116,13 +117,13 @@ Full commands, every test name, the mutants and the DMAIC analysis: [docs/result
 | [`db_public_access_test.rego`](policy/terraform/db_public_access/db_public_access_test.rego) (PAC004) | 4 | 2 passing (private or unset, deleted), 2 failing (RDS and Aurora instances) |
 | [`encryption_at_rest_test.rego`](policy/terraform/encryption_at_rest/encryption_at_rest_test.rego) (PAC005) | 5 | 2 passing, 3 failing (RDS, Aurora cluster, volume left unset) |
 | [`required_tags_test.rego`](policy/terraform/required_tags/required_tags_test.rego) (PAC006) | 7 | 4 passing (`default_tags`, values known after apply, unknown `tags_all`, no tag support), 3 failing (missing, blank, untagged) |
-| [`scripts/mutate.sh`](scripts/mutate.sh) | 12 mutants | Every deliberate rule bug makes at least one unit test fail |
+| [`scripts/mutate.sh`](scripts/mutate.sh) | 19 mutants | Every deliberate rule bug makes at least one unit test fail |
 | [`scripts/e2e.sh`](scripts/e2e.sh) | 2 real plans | Compliant plan: exit 0, 0 violations; non-compliant plan: exit 1, exactly the 11 lines of [`expected-violations.txt`](examples/noncompliant/expected-violations.txt); all 6 rule packages evaluated |
 
 | Check | Result |
 |---|---|
-| Unit tests (`make test`) | **56 passed**, 0 failed, 0.13 s |
-| Mutation check (`make mutate`) | **12 of 12** mutants killed, 4.1 to 4.7 s |
+| Unit tests (`make test`) | **57 passed**, 0 failed |
+| Mutation check (`make mutate`) | **19 of 19** mutants killed (7 added in the 2026-11-01 quality pass) |
 | End to end (`make e2e`) | compliant plan (20 resources): **0 violations**; non-compliant plan (12 resources): **11 of 11 expected violations**, nothing else; 18.5 to 18.9 s |
 | Does the gate catch a broken rule? | With PAC003 changed to ignore `::/0`, `make e2e` failed and showed the missing RDP line |
 | Cloud access | 0 AWS API calls (placeholder keys, network blocked after `init`); nothing applied |
