@@ -37,9 +37,9 @@ bin=.tmp/bin
 dl=$bin/download
 stamp="opa $OPA_VERSION, conftest $CONFTEST_VERSION, terraform $TERRAFORM_VERSION"
 
-# fetch URL NAME: download one release asset over HTTPS into the staging folder.
+# fetch URL NAME: download one release asset over HTTPS (bounded retries and time) into the staging folder.
 fetch() {
-  curl -fsSL --retry 3 --proto '=https' --tlsv1.2 -o "$dl/$2" "$1"
+  curl -fsSL --retry 3 --connect-timeout 20 --max-time 600 --proto '=https' --tlsv1.2 -o "$dl/$2" "$1"
 }
 
 # verify NAME PINNED SUMS: the file must hash to the pinned value, which the published sums must list.
