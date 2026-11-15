@@ -26,7 +26,7 @@ flowchart LR
   PR["pull request<br/>Terraform change"] --> P["terraform plan -out<br/>scripts/tf.sh: no credentials,<br/>network blocked after init"]
   P --> J["terraform show -json<br/>plan JSON"]
   J --> C["conftest test --all-namespaces"]
-  subgraph R["policy/ (Rego, OPA 1.22.0)"]
+  subgraph R["policy/ (Rego, OPA 1.22.4)"]
     L["lib/tfplan<br/>planned resources, module references"]
     R1["PAC001 public access block"]
     R2["PAC002 public ACL / policy"]
@@ -81,7 +81,7 @@ Each message starts with the rule ID and the resource address, for example `PAC0
 | Area | In M1 | Planned |
 |---|---|---|
 | Rules | OPA Rego (v1 syntax), six rules on Terraform plan JSON, a shared `lib/tfplan` library | Gatekeeper constraint templates for Kubernetes (M2) |
-| Enforcement | conftest 0.71.1 in GitHub Actions on real plans from Terraform 1.17.1 and hashicorp/aws 6.71.0 | Audit mode and time-limited waivers (M3) |
+| Enforcement | conftest 0.71.1 in GitHub Actions on real plans from Terraform 1.17.2 and hashicorp/aws 6.73.0 | Audit mode and time-limited waivers (M3) |
 | Testing | `opa test` (57 tests, passing and failing fixtures), a 19-mutant mutation check, an end-to-end check with an exact expected-violations list | Coverage report (M2) |
 | Supply chain | Tools pinned by version and SHA-256, govulncheck binary audit with an explicit accepted list, actions pinned by SHA | - |
 
@@ -92,7 +92,7 @@ Languages: **Rego** and **HCL** (examples), with POSIX shell scripts. The rules 
 **Prerequisites:** `make`, a POSIX shell, `curl`, `unzip` and `tar` (Linux, or Git Bash on Windows; amd64). Go 1.26 only for `make audit`. No cloud account: `make setup` downloads OPA, conftest and Terraform into `.tmp/bin` and checks each against the SHA-256 pinned in `scripts/tools.sh` and the checksum file published with the release.
 
 ```bash
-make setup    # pinned OPA 1.22.0, conftest 0.71.1, Terraform 1.17.1 into .tmp/bin, checksum-verified
+make setup    # pinned OPA 1.22.4, conftest 0.71.1, Terraform 1.17.2 into .tmp/bin, checksum-verified
 make lint     # opa fmt --fail, opa check --strict, terraform fmt -check
 make test     # opa test: 57 unit tests
 make mutate   # 19 deliberate bugs in copies of the policies; the tests must catch each one
@@ -128,7 +128,7 @@ Quality check against the 10 engineering rules, with the mutation table: [docs/q
 | Does the gate catch a broken rule? | With PAC003 changed to ignore `::/0`, `make e2e` failed and showed the missing RDP line |
 | Cloud access | 0 AWS API calls (placeholder keys, network blocked after `init`); nothing applied |
 | Lint | `opa fmt --fail`, `opa check --strict`, `terraform fmt -check`: clean. Regal 0.43.0 run once: 37 findings, all fixed |
-| Supply chain | 3 of 3 tool downloads match the pinned and published SHA-256; govulncheck (Go 1.26.10): GO-2026-5932 in Terraform and the AWS provider and, since 2026-11-05, GO-2026-6865 (`klauspost/compress`) in opa, conftest and Terraform, no fixed release of either; conftest 0.71.1, the latest release, 16 IDs (17 in the Windows build) from its Go 1.27.1 build and older `golang.org/x/net`; all accepted per binary with a reason in [`scripts/audit-accepted.txt`](scripts/audit-accepted.txt) |
+| Supply chain | 3 of 3 tool downloads match the pinned and published SHA-256; govulncheck (Go 1.26.11): OPA 1.22.4 clean; GO-2026-5932 in Terraform and the AWS provider, no fixed release; GO-2026-6859 (net/http, 2026-11-11) in Terraform 1.17.2, still built with Go 1.26.10; conftest 0.71.1, the latest release, 18 IDs (19 in the Windows build): GO-2026-5932 and IDs from its Go 1.27.1 build and older `golang.org/x/net` and `klauspost/compress`; all accepted per binary with a reason in [`scripts/audit-accepted.txt`](scripts/audit-accepted.txt) |
 
 ## Roadmap
 

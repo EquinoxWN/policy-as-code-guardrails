@@ -47,3 +47,7 @@ The Go security release of 2026-10-08 left conftest, Terraform and the AWS provi
 ## Update (2026-10-30)
 
 Terraform 1.17.1 (built with Go 1.26.10) and hashicorp/aws 6.71.0 (Go 1.27.3) no longer contain the IDs of the 2026-10-08 Go security release, so their entries were removed and both are accepted for GO-2026-5932 only. OPA 1.22.0 (Go 1.27.3) is clean. conftest 0.71.1 is still the latest release and is built with Go 1.27.1; besides the earlier IDs it now reports GO-2026-6809 (crypto/x509, fixed in Go 1.26.10 / 1.27.3) and GO-2026-6860 and GO-2026-6866 (`golang.org/x/net/html`, fixed in x/net 0.62.0). They are accepted for conftest only, because here it reads local Rego and plan JSON, verifies no TLS certificate and parses no HTML; any finding in the other three binaries still fails the build.
+
+## Update (2026-11-15)
+
+GO-2026-6859 (net/http HTTP/1 server crash, fixed in Go 1.26.11 / 1.27.4, published 2026-11-11) was reported in all four binaries. OPA 1.22.4 and hashicorp/aws 6.73.0 are built with Go 1.27.4, so OPA moved 1.22.0 -> 1.22.4 (also clean of GO-2026-6865) and the lock files moved 6.71.0 -> 6.73.0. Terraform moved 1.17.1 -> 1.17.2, which drops GO-2026-6865 (compress 1.20.2) but is still built with Go 1.26.10, so GO-2026-6859 is accepted for Terraform and conftest only: neither runs an HTTP server here. Any finding in OPA or the provider other than GO-2026-5932 still fails the build.
